@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SnackUp – Better Choices. Healthier You.</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥗</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF6E9;--card:#fff;--ink:#0F3D2B;--g:#14513A;--lime:#C6EA5A;--pink:#FF9EB8;--sun:#FFC93C;--mut:#5b7a6c;--ln:#e4dcc3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E241B;--card:#173B2C;--ink:#F3EEDC;--g:#C6EA5A;--mut:#a9c3b4;--ln:#2a5440}}
+:root[data-theme="dark"]{--bg:#0E241B;--card:#173B2C;--ink:#F3EEDC;--g:#C6EA5A;--mut:#a9c3b4;--ln:#2a5440}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;font-weight:700}
+#app{max-width:440px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+main{flex:1;padding:18px 18px 90px}
+h1,h2,h3,.d{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;line-height:1.05;margin:0}
+h1{font-size:34px}h2{font-size:26px}h3{font-size:19px}
+p{margin:6px 0;line-height:1.4;font-size:15px}
+.mut{color:var(--mut);font-size:14px}
+.card{background:var(--card);border:2px solid var(--ln);border-radius:18px;padding:14px;margin:10px 0}
+.btn{display:block;width:100%;border:0;border-radius:14px;background:#14513A;color:#FBF6E9;font:800 16px 'Nunito',sans-serif;padding:14px;cursor:pointer;margin-top:12px}
+.btn.alt{background:var(--lime);color:#0F3D2B}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tile{border:0;border-radius:16px;padding:12px 4px;font:800 13px 'Nunito',sans-serif;color:#0F3D2B;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tile b{font-size:26px}
+.chip{display:inline-block;border:2px solid var(--ln);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;margin:4px 4px 0 0;font:800 14px 'Nunito',sans-serif;cursor:pointer}
+input[type=text]{width:100%;border:2px solid var(--ln);background:var(--card);color:var(--ink);border-radius:14px;padding:13px;font:700 16px 'Nunito',sans-serif}
+.tag{font:800 12px 'Baloo 2',sans-serif;border-radius:8px;padding:3px 8px;margin-right:8px;color:#0F3D2B}
+.add{background:var(--lime)}.swap{background:var(--sun)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--ink);border:2px solid var(--ln);border-radius:14px;padding:12px;margin:8px 0;font:800 15px 'Nunito',sans-serif;cursor:pointer}
+.opt.ok{border-color:#2e9e57;background:#d8f5df;color:#0F3D2B}.opt.no{border-color:#e0556f;background:#ffe0e6;color:#0F3D2B}
+.bar{height:10px;border-radius:9px;background:var(--ln);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:#2e9e57}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;background:var(--card);border-top:2px solid var(--ln);display:flex;padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;border:0;background:none;color:var(--mut);font:800 12px 'Nunito',sans-serif;cursor:pointer}nav button.on{color:var(--g)}nav b{display:block;font-size:20px}
+.back{border:0;background:none;color:var(--ink);font:800 15px 'Nunito',sans-serif;cursor:pointer;padding:0 0 10px}
+.hero{background:linear-gradient(160deg,#14513A,#2e9e57);color:#FBF6E9;border-radius:22px;padding:22px;margin:12px 0}
+.ring{width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.ring span{width:74px;height:74px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font:800 26px 'Baloo 2',sans-serif}
+.row{display:flex;align-items:center;gap:10px}
+.chk{width:26px;height:26px;border-radius:8px;border:2px solid var(--ln);flex:none;display:flex;align-items:center;justify-content:center;background:var(--card);color:#0F3D2B}.chk.on{background:var(--lime);border-color:#2e9e57}
+</style></head><body><div id="app"></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S={role:'',saved:[],voted:'',votes:{'Chicken Wrap':124,'Grilled Chicken Bowl':92,'Veggie Wrap':66,'Fruit Cup':44},poll:'',pv:{Fruit:42,Nuts:26,Yogurt:18,'Veg sticks':12},days:[0,0,0,0,0,0,0],goals:[0,0,0],tip:0};
+try{const x=localStorage.getItem('snackup');if(x)S=Object.assign(S,JSON.parse(x))}catch(e){}
+const save=()=>{try{localStorage.setItem('snackup',JSON.stringify(S))}catch(e){}};
+let scr=S.role?'home':'splash',Q={i:0,s:0,a:null},meal='',parent=false;
+const M=[[/burger/,['ADD|a side salad or vegetables','SWAP|grilled chicken for beef','SWAP|baked wedges for fries','SWAP|water or unsweetened tea for soda']],
+[/pizza/,['ADD|a side salad or veggie toppings','SWAP|thin crust or whole-wheat base','SWAP|an extra slice for a fruit cup','SWAP|water for soda']],
+[/fries|chips|crisps/,['SWAP|baked wedges for fried fries','SWAP|a small portion plus a yogurt dip','ADD|cucumber or carrot sticks','SWAP|nuts for a bag of chips']],
+[/soda|cola|juice|drink|shake/,['SWAP|water, sparkling water or unsweetened tea','SWAP|a small glass of real fruit for juice','ADD|ice and a slice of lemon']],
+[/pasta|noodle|ramen/,['ADD|vegetables and a lean protein','SWAP|whole-wheat pasta','SWAP|tomato sauce for a creamy sauce','ADD|a side salad']],
+[/shawarma|wrap|sandwich|kebab/,['ADD|extra salad and veg','SWAP|whole-grain bread or wrap','SWAP|garlic sauce for yogurt sauce','SWAP|grilled for fried fillings']],
+[/nugget|fried|chicken/,['SWAP|grilled or baked chicken for fried','ADD|a side salad','SWAP|water for soda','ADD|a fruit cup for dessert']],
+[/cake|choc|ice|dessert|sweet|cookie|donut|candy/,['SWAP|fruit and yogurt for a heavy dessert','SWAP|a small portion you really enjoy','ADD|berries or banana on top','SWAP|dark chocolate for milk chocolate']]];
+const G=['ADD|vegetables or a side salad','ADD|a piece of fruit','SWAP|water for sugary drinks','SWAP|grilled or baked for fried','SWAP|a smaller portion to share'];
+const C=[['Chicken Wrap','🌯'],['Grilled Chicken Bowl','🥗'],['Veggie Wrap','🥬'],['Fruit Cup','🍓']];
+const R=[['Avocado Toast','10 mins',['Whole-grain toast','1 ripe avocado','Lemon, salt, pepper'],'Toast the bread, mash the avocado with lemon and spread it on.'],['Fruit & Yogurt Bowl','5 mins',['Plain yogurt','Mixed fruit','Handful of nuts'],'Spoon yogurt into a bowl, top with fruit and nuts.'],['Veggie Wrap','10 mins',['Whole-wheat wrap','Hummus','Cucumber, lettuce, tomato'],'Spread hummus, add veg, roll tight and slice.'],['Baked Wedges','30 mins',['2 potatoes','1 tbsp olive oil','Paprika, salt'],'Cut wedges, toss with oil and spices, bake at 200°C for 25 minutes.']];
+const QZ=[['Which drink is better for your body?',['Regular soda','Water','Sweet juice drink'],1,'Water hydrates with no added sugar.'],['Which snack keeps you full longer?',['Handful of nuts','Sweets','Plain crisps'],0,'Nuts have protein and healthy fats.'],['Which supports strong bones?',['Milk or yogurt','Energy drinks','Candy'],0,'Dairy gives calcium, which bones need as you grow.'],['Best way to treat a craving?',['Ban it forever','Swap or add something','Skip lunch'],1,'Small swaps work better than banning foods.'],['Which is a whole grain?',['White bread','Oats','Cake'],1,'Whole grains give steady energy for school.']];
+const P=[['Your go-to healthy snack?'],];
+const T=['Drink water before you feel hungry. Sometimes thirst feels like hunger.','Add one colour to every meal: a tomato, cucumber or berries.','Skipping breakfast can make focus harder in class. Even a banana helps.','Eating out? Ask for the sauce on the side and swap the soda for water.','Aim for progress, not perfect. One better choice counts.','Share a swap with a friend. Habits stick when you do them together.'];
+const DAYS=['Swap one sugary drink for water','Add a fruit or veg to a meal','Pick the whole-grain option','Snack on nuts, yogurt or fruit','Cook one SnackUp recipe','Vote in the canteen poll','Challenge a friend'];
+const GOALS=['Eat more fruits and vegetables','Drink more water','Try 1 new healthy recipe'];
+function go(s){scr=s;render();scrollTo(0,0)}
+function suggest(t){meal=t;go('res')}
+function setRole(r){S.role=r;save();go('home')}
+function sv(){const k=meal;if(!S.saved.includes(k))S.saved.push(k);save();render()}
+function vote(n){if(S.voted)return;S.voted=n;S.votes[n]++;save();render()}
+function pv(n){if(S.poll)return;S.poll=n;S.pv[n]++;save();render()}
+function ans(i){if(Q.a!==null)return;Q.a=i;if(i===QZ[Q.i][2])Q.s++;render()}
+function nextQ(){Q.i++;Q.a=null;render()}
+function tog(k,i){S[k][i]=S[k][i]?0:1;save();render()}
+const back=t=>`<button class="back" onclick="go('${t||'home'}')">← Back</button>`;
+function nav(){return `<nav>${[['home','🏠','Home'],['saved','🔖','Saved'],['prog','📈','Progress']].map(n=>`<button class="${scr===n[0]?'on':''}" onclick="go('${n[0]}')"><b>${n[1]}</b>${n[2]}</button>`).join('')}</nav>`}
+function tag(x){const[a,b]=x.split('|');return `<div class="row" style="margin:8px 0"><span class="tag ${a==='ADD'?'add':'swap'}">${a==='ADD'?'ADD':'REPLACE'}</span><span>${b}</span></div>`}
+const V={
+splash:()=>`<main style="display:flex;flex-direction:column;justify-content:center;text-align:center;min-height:100vh"><div style="font-size:64px">🌱</div><h1 style="font-size:52px">Snack<span style="color:#2e9e57">Up</span></h1><p>Better choices. Healthier you.</p><p class="mut">Type any meal. Get a smarter version. No lectures, nothing banned.</p><button class="btn" onclick="go('role')">Get Started</button></main>`,
+role:()=>`<main>${back('splash')}<h2>What best describes you?</h2><p class="mut">We'll tailor tips for you.</p>${[['Teenager','🧑‍🎓','teen'],['Parent','👩','parent'],['Both','👨‍👩‍👧','both']].map(r=>`<button class="opt" onclick="setRole('${r[2]}')" style="font-size:18px">${r[1]} ${r[0]}</button>`).join('')}</main>`,
+home:()=>`<main><p class="mut" style="margin:0">Good to see you 👋</p><h1>What are we eating today?</h1><div class="hero"><h3>Craving something?</h3><p>Type it in. We'll show you what to add or replace.</p><button class="btn alt" onclick="parent=false;go('meal')">Find better options</button></div><div class="grid">${[['🍽️','Meal ideas','#C6EA5A','meal'],['🏫','Canteen','#FFC93C','canteen'],['🥣','Recipes','#FF9EB8','rec'],['❓','Quizzes','#9AD7F0','quiz'],['📊','Polls','#E3C9F5','poll'],['💡','Tips','#C6EA5A','tips']].map(t=>`<button class="tile" style="background:${t[2]}" onclick="parent=false;go('${t[3]}')"><b>${t[0]}</b>${t[1]}</button>`).join('')}</div><div class="card" style="background:var(--pink);color:#0F3D2B;border:0"><h3>For parents</h3><p>Your child wants something from outside? Don't say no. Add or replace instead.</p><button class="btn" onclick="parent=true;go('meal')">Make their favourite healthier</button></div></main>${nav()}`,
+meal:()=>`<main>${back()}<h2>${parent?"What does your child want to eat?":'What did you eat?'}</h2><p class="mut">${parent?'Enter the meal and get ways to add or replace, without banning it.':'Type a meal or snack, or tap one below.'}</p><input type="text" id="mi" placeholder="e.g. cheeseburger, pizza, soda" onkeydown="if(event.key==='Enter')suggest(this.value)"><button class="btn" onclick="suggest($('mi').value)">Find better options</button><p style="margin-top:16px"><b>Popular</b></p>${['Burger','Pizza','Fries','Shawarma','Pasta','Soda','Ice cream','Nuggets'].map(x=>`<button class="chip" onclick="suggest('${x}')">${x}</button>`).join('')}</main>${nav()}`,
+res:()=>{const m=meal.trim();if(!m)return V.meal();const f=M.find(x=>x[0].test(m.toLowerCase())),L=f?f[1]:G;return `<main>${back('meal')}<h2>Healthier ${esc(m)}</h2><div class="card"><p>${parent?`Instead of saying no to <b>${esc(m)}</b>, try these. Your child still gets the meal they wanted:`:`Your choice is fine! Here's how to make it healthier:`}</p>${L.map(tag).join('')}${f?'':'<p class="mut">We don\'t have a custom match yet, so here are general swaps that work for most meals.</p>'}</div><button class="btn" onclick="sv()">${S.saved.includes(m)?'✓ Saved':'Save this option'}</button></main>${nav()}`},
+canteen:()=>{const t=Object.values(S.votes).reduce((a,b)=>a+b,0);return `<main>${back()}<h2>School Canteen</h2><p class="mut">Vote for meals you'd like served at school. ${S.voted?'Thanks for voting!':'One vote each.'}</p>${C.map(c=>{const p=Math.round(S.votes[c[0]]/t*100);return `<button class="opt" onclick="vote('${c[0]}')"><div class="row" style="justify-content:space-between"><span>${c[1]} ${c[0]} ${S.voted===c[0]?'✓':''}</span><span>${p}%</span></div><div class="bar"><i style="width:${p}%"></i></div></button>`}).join('')}<p class="mut">${t} votes so far</p></main>${nav()}`},
+rec:()=>`<main>${back()}<h2>Easy recipes</h2>${R.map(r=>`<details class="card"><summary><b>${r[0]}</b> <span class="mut">· ${r[1]}</span></summary><p><b>You need:</b> ${r[2].join(', ')}</p><p>${r[3]}</p></details>`).join('')}</main>${nav()}`,
+quiz:()=>{if(Q.i>=QZ.length)return `<main>${back()}<h2>Quiz done!</h2><div class="hero"><h1>${Q.s}/${QZ.length}</h1><p>${Q.s>=4?'Nutrition pro!':'Nice start. Try again!'}</p></div><button class="btn" onclick="Q={i:0,s:0,a:null};render()">Play again</button></main>${nav()}`;const q=QZ[Q.i];return `<main>${back()}<p class="mut">Question ${Q.i+1} of ${QZ.length}</p><h2>${q[0]}</h2>${q[1].map((o,i)=>`<button class="opt ${Q.a!==null?(i===q[2]?'ok':i===Q.a?'no':''):''}" onclick="ans(${i})">${o}</button>`).join('')}${Q.a!==null?`<div class="card"><p>${q[3]}</p></div><button class="btn" onclick="nextQ()">Next</button>`:''}</main>${nav()}`},
+poll:()=>{const t=Object.values(S.pv).reduce((a,b)=>a+b,0);return `<main>${back()}<h2>Daily poll</h2><p class="mut">What's your go-to healthy snack?</p>${Object.keys(S.pv).map(k=>{const p=Math.round(S.pv[k]/t*100);return `<button class="opt" onclick="pv('${k}')"><div class="row" style="justify-content:space-between"><span>${k} ${S.poll===k?'✓':''}</span><span>${S.poll?p+'%':''}</span></div>${S.poll?`<div class="bar"><i style="width:${p}%"></i></div>`:''}</button>`}).join('')}<p class="mut">${S.poll?'See what other teens chose.':'Vote to see results.'}</p></main>${nav()}`},
+tips:()=>`<main>${back()}<h2>Tip of the day</h2><div class="hero"><p style="font-size:19px">💡 ${T[S.tip%T.length]}</p></div><button class="btn" onclick="S.tip++;save();render()">Next tip</button></main>${nav()}`,
+saved:()=>`<main><h2>Saved</h2>${S.saved.length?S.saved.map(s=>`<button class="opt" onclick="suggest('${esc(s).replace(/'/g,'')}')">🔖 ${esc(s)}</button>`).join(''):'<p class="mut">Nothing saved yet. Find better options for a meal and tap Save.</p>'}</main>${nav()}`,
+prog:()=>{const d=S.days.filter(Boolean).length;return `<main><h2>My progress</h2><div class="card row"><div class="ring" style="background:conic-gradient(#2e9e57 ${d/7*360}deg,var(--ln) 0)"><span>${d}/7</span></div><div><h3>7-Day Snack Swap</h3><p class="mut">One tiny swap a day. Tick them off!</p></div></div>${DAYS.map((t,i)=>`<div class="card row" onclick="tog('days',${i})" style="cursor:pointer;margin:6px 0"><div class="chk ${S.days[i]?'on':''}">${S.days[i]?'✓':''}</div><span>Day ${i+1}: ${t}</span></div>`).join('')}<h3 style="margin-top:18px">My goals</h3>${GOALS.map((t,i)=>`<div class="card row" onclick="tog('goals',${i})" style="cursor:pointer;margin:6px 0"><div class="chk ${S.goals[i]?'on':''}">${S.goals[i]?'✓':''}</div><span>${t}</span></div>`).join('')}${d===7?'<div class="hero"><h3>You did it! 🎉</h3><p>Challenge a friend to try it too.</p></div>':''}</main>${nav()}`}
+};
+function render(){$('app').innerHTML=V[scr]();}
+render();
+</script></body></html>
